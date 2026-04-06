@@ -1,0 +1,69 @@
+
+
+syntax = "proto3";
+
+package raft;
+
+service RaftService{
+	rpc RequestVote(RequestVoteArgs) returns(RequestVoteReply){}
+	rpc AppendEntries(AppendEntriesArgs) returns(AppendEntriesReply){}
+}
+
+message PersistState{
+	int32 current_term = 1;
+	int32 voted_for = 2;
+	repeated LogEntry logs = 3;
+}
+
+
+message LogEntry{
+	int32 term = 1;
+	int32 index = 2;
+	bytes command = 3;
+}
+
+enum OpType{
+	GET = 0;
+	PUT = 1;
+	APPEND = 2;
+}
+message CommandMsg{
+	OpType type = 1;
+	string key = 2;
+	string value = 3;
+	int64 client_id = 4;
+	int64 seq_id = 5;
+}
+
+
+message RequestVoteArgs{
+	int32 term = 1;
+	int32 candidateId = 2;
+	int32 lastLogIndex = 3;
+	int32 lastLogTerm = 4;
+}
+
+message RequestVoteReply{
+	int32 term = 1;
+	bool voteGranted = 2;
+}
+
+message AppendEntriesArgs{
+	int32 term = 1;
+	int32 leaderId = 2;
+	int32 prevLogIndex = 3;
+	int32 prevLogTerm = 4;
+	repeated LogEntry entries = 5;
+	int32 leaderCommit = 6;
+}
+
+message AppendEntriesReply{
+	int32 term = 1;
+	bool success = 2;
+	int32 conflictTerm = 3;
+	int32 conflictIndex = 4;
+	int32 id = 5;
+}
+
+
+
