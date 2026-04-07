@@ -16,6 +16,11 @@ namespace flz {
 		
 	}
 
+	KVServer::~KVServer(){
+
+	}
+
+
 	void KVServer::ApplierCallback(const raft::LogEntry& entry){
 
 
@@ -34,7 +39,11 @@ namespace flz {
 			flz::Mutex::Lock lock(m_wait_map_mutex);
 			auto it = m_wait_map.find(entry.index());
 			if(it != m_wait_map.end()){
-				it->second.set_value(result_value);
+				if(it->second.term == entry.term()){
+					it->second.prom.set_value(result_value);
+				}else {
+					it->second.prom.set_value("ERROR_WRONG_LEADER");
+				}
 				m_wait_map.erase(it);
 			}
 		}
@@ -43,16 +52,24 @@ namespace flz {
 
 	grpc::Status KVServer::Put(grpc::ServerContext* context,const kv::PutRequest* request,kv::PutReply* reply){
 		StartResult sr = m_raft_node->start(request->command());
+
+		if(!sr.is_leader){
+			return grpc::Status(grpc::StatusCode::UNAVAILABLE,"Not Leader");
+		}
+
 		flz::Promise<std::string> prom;
 		flz::Future<std::string> fut = prom.get_future();
 		
 		{
 			flz::Mutex::Lock lock(m_wait_map_mutex);
-			m_wait_map[sr.index] = std::move(prom);
+			m_wait_map[sr.index] = {sr.term,std::move(prom)};
 		}
 		
 		std::string result;
 		if(fut.wait_for(std::chrono::milliseconds(500),result)){
+			if (result == "ERROR_WRONG_LEADER") {
+				return grpc::Status(grpc::StatusCode::ABORTED, "Lost Leadership before commit");
+			}
 			return grpc::Status::OK;
 		}else{
 			return grpc::Status(grpc::StatusCode::DEADLINE_EXCEEDED,"TIMEOUT");
@@ -62,16 +79,22 @@ namespace flz {
 	
 	grpc::Status KVServer::Get(grpc::ServerContext* context,const kv::GetRequest* request,kv::GetReply* reply){
 		StartResult sr = m_raft_node->start(request->command());
+		if(!sr.is_leader){
+			return grpc::Status(grpc::StatusCode::UNAVAILABLE,"Not Leader");
+		}
 		flz::Promise<std::string> prom;
 		flz::Future<std::string> fut = prom.get_future();
 		
 		{
 			flz::Mutex::Lock lock(m_wait_map_mutex);
-			m_wait_map[sr.index] = std::move(prom);
+			m_wait_map[sr.index] = {sr.term,std::move(prom)};
 		}
 		
 		std::string result;
 		if(fut.wait_for(std::chrono::milliseconds(500),result)){
+			if (result == "ERROR_WRONG_LEADER") {
+				return grpc::Status(grpc::StatusCode::ABORTED, "Lost Leadership before commit");
+			}
 			return grpc::Status::OK;
 		}else{
 			return grpc::Status(grpc::StatusCode::DEADLINE_EXCEEDED,"TIMEOUT");

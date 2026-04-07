@@ -194,13 +194,13 @@ class PutRequest PROTOBUF_FINAL :
     kCommandFieldNumber = 2,
     kIdFieldNumber = 1,
   };
-  // string command = 2;
+  // bytes command = 2;
   void clear_command();
   const std::string& command() const;
   void set_command(const std::string& value);
   void set_command(std::string&& value);
   void set_command(const char* value);
-  void set_command(const char* value, size_t size);
+  void set_command(const void* value, size_t size);
   std::string* mutable_command();
   std::string* release_command();
   void set_allocated_command(std::string* command);
@@ -358,13 +358,13 @@ class GetRequest PROTOBUF_FINAL :
     kCommandFieldNumber = 2,
     kIdFieldNumber = 1,
   };
-  // string command = 2;
+  // bytes command = 2;
   void clear_command();
   const std::string& command() const;
   void set_command(const std::string& value);
   void set_command(std::string&& value);
   void set_command(const char* value);
-  void set_command(const char* value, size_t size);
+  void set_command(const void* value, size_t size);
   std::string* mutable_command();
   std::string* release_command();
   void set_allocated_command(std::string* command);
@@ -780,7 +780,7 @@ inline void PutRequest::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:kv.PutRequest.id)
 }
 
-// string command = 2;
+// bytes command = 2;
 inline void PutRequest::clear_command() {
   command_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
@@ -816,7 +816,7 @@ inline void PutRequest::set_command(const char* value) {
               GetArena());
   // @@protoc_insertion_point(field_set_char:kv.PutRequest.command)
 }
-inline void PutRequest::set_command(const char* value,
+inline void PutRequest::set_command(const void* value,
     size_t size) {
   
   command_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
@@ -885,7 +885,7 @@ inline void GetRequest::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:kv.GetRequest.id)
 }
 
-// string command = 2;
+// bytes command = 2;
 inline void GetRequest::clear_command() {
   command_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
@@ -921,7 +921,7 @@ inline void GetRequest::set_command(const char* value) {
               GetArena());
   // @@protoc_insertion_point(field_set_char:kv.GetRequest.command)
 }
-inline void GetRequest::set_command(const char* value,
+inline void GetRequest::set_command(const void* value,
     size_t size) {
   
   command_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(

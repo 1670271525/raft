@@ -141,8 +141,8 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_kv_5fserver_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\017kv_server.proto\022\002kv\")\n\nPutRequest\022\n\n\002i"
-  "d\030\001 \001(\005\022\017\n\007command\030\002 \001(\t\")\n\nGetRequest\022\n"
-  "\n\002id\030\001 \001(\005\022\017\n\007command\030\002 \001(\t\"6\n\010PutReply\022"
+  "d\030\001 \001(\005\022\017\n\007command\030\002 \001(\014\")\n\nGetRequest\022\n"
+  "\n\002id\030\001 \001(\005\022\017\n\007command\030\002 \001(\014\"6\n\010PutReply\022"
   "\n\n\002id\030\001 \001(\005\022\r\n\005count\030\002 \001(\005\022\017\n\007logSize\030\003 "
   "\001(\005\"E\n\010GetReply\022\n\n\002id\030\001 \001(\005\022\r\n\005count\030\002 \001"
   "(\005\022\017\n\007logSize\030\003 \001(\005\022\r\n\005value\030\004 \001(\t2Y\n\tKV"
@@ -254,12 +254,11 @@ const char* PutRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID:
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // string command = 2;
+      // bytes command = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
           auto str = _internal_mutable_command();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "kv.PutRequest.command"));
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -297,13 +296,9 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_id(), target);
   }
 
-  // string command = 2;
+  // bytes command = 2;
   if (this->command().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_command().data(), static_cast<int>(this->_internal_command().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "kv.PutRequest.command");
-    target = stream->WriteStringMaybeAliased(
+    target = stream->WriteBytesMaybeAliased(
         2, this->_internal_command(), target);
   }
 
@@ -323,10 +318,10 @@ size_t PutRequest::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string command = 2;
+  // bytes command = 2;
   if (this->command().size() > 0) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_command());
   }
 
@@ -490,12 +485,11 @@ const char* GetRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID:
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // string command = 2;
+      // bytes command = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
           auto str = _internal_mutable_command();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "kv.GetRequest.command"));
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -533,13 +527,9 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_id(), target);
   }
 
-  // string command = 2;
+  // bytes command = 2;
   if (this->command().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_command().data(), static_cast<int>(this->_internal_command().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "kv.GetRequest.command");
-    target = stream->WriteStringMaybeAliased(
+    target = stream->WriteBytesMaybeAliased(
         2, this->_internal_command(), target);
   }
 
@@ -559,10 +549,10 @@ size_t GetRequest::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string command = 2;
+  // bytes command = 2;
   if (this->command().size() > 0) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_command());
   }
 

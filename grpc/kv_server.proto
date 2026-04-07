@@ -15,13 +15,13 @@ service KVService{
 
 message PutRequest{
 	int32 id = 1;
-	string command = 2;
+	bytes command = 2;
 	
 }
 
 message GetRequest{
 	int32 id = 1;
-	string command = 2;
+	bytes command = 2;
 }
 
 

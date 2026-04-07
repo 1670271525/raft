@@ -10,7 +10,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out/test)
 find_package(Threads REQUIRED)
 find_package(Protobuf REQUIRED)
 
-# 2. 引入 PkgConfig 并寻找 gRPC (关键修复点)
+# 2. 引入 PkgConfig 并寻找 gRPC 
 find_package(PkgConfig REQUIRED)
 # IMPORTED_TARGET 标志会帮我们自动生成一个现代的 CMake 链接目标 PkgConfig::GRPC
 pkg_check_modules(GRPC REQUIRED IMPORTED_TARGET grpc++ grpc)
@@ -23,6 +23,10 @@ include_directories(
 set(GRPC_SRCS
     ${CMAKE_SOURCE_DIR}/grpc/raft.pb.cc
     ${CMAKE_SOURCE_DIR}/grpc/raft.grpc.pb.cc
+	${CMAKE_SOURCE_DIR}/grpc/kv_server.pb.cc
+	${CMAKE_SOURCE_DIR}/grpc/kv_server.grpc.pb.cc
+
+
 )
 
 set(CORE_SRCS
@@ -31,6 +35,12 @@ set(CORE_SRCS
     ${CMAKE_SOURCE_DIR}/src/thread_pool.cc
     ${CMAKE_SOURCE_DIR}/src/raft.cc
 	${CMAKE_SOURCE_DIR}/src/kv_state_machine.cc
+	${CMAKE_SOURCE_DIR}/src/kv_server.cc
+	${CMAKE_SOURCE_DIR}/src/command.cc
+	${CMAKE_SOURCE_DIR}/src/util.cc
+
+
+
 )
 
 # 编译核心库
@@ -44,12 +54,15 @@ target_link_libraries(raft_core
     PkgConfig::GRPC
 )
 
-add_executable(test_raft ${CMAKE_SOURCE_DIR}/test/test_raft.cc)
-target_link_libraries(test_raft PRIVATE raft_core)
+#add_executable(test_raft ${CMAKE_SOURCE_DIR}/test/test_raft.cc)
+#target_link_libraries(test_raft PRIVATE raft_core)
 
 
 
 
-# 添加 Lab2A 专门的自动化测试可执行文件
-add_executable(test_lab2b ${CMAKE_SOURCE_DIR}/test/test_lab2b.cc)
-target_link_libraries(test_lab2b PRIVATE raft_core)
+# 添加专门的自动化测试可执行文件
+add_executable(test_cluster ${CMAKE_SOURCE_DIR}/test/test_cluster.cc)
+target_link_libraries(test_cluster PRIVATE raft_core)
+
+
+

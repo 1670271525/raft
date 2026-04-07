@@ -390,11 +390,13 @@ namespace flz{
 			sr.index = -1;
 			sr.term = -1;
 			sr.is_leader = false;
+			return sr;
 		}
 
 		sr.term = m_current_term;
 		sr.index = m_logs.size();
-		
+		sr.is_leader = true;
+
 		raft::LogEntry entry;
 		entry.set_term(m_current_term);
 		entry.set_command(command);
